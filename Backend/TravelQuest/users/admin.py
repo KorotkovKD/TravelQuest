@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import User
+from .models import User, Wallet
 
 
 class TravelQuestAdminSite(admin.AdminSite):
@@ -17,13 +17,23 @@ class TravelQuestUserAdmin(UserAdmin):
         "id",
         "username",
         "email",
-        "lvl",
-        "is_staff", 
+        "is_staff",
         "is_active",
     )
     search_fields = ("username",)
     list_filter = (
-        "username",
-        "email",
+        "is_staff",
+        "is_active",
     )
+    empty_value_display = "-пусто-"
+
+
+@admin.register(Wallet, site=ADMIN_SITE)
+class TravelQuestWalletAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "owner",
+        "value",
+    )
+    search_fields = ("owner",)
     empty_value_display = "-пусто-"

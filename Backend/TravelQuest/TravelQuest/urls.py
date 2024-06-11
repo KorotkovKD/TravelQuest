@@ -5,5 +5,5 @@ from users.admin import ADMIN_SITE
 
 urlpatterns = (
     path("admin/", ADMIN_SITE.urls),
+    path('api/', include('api.urls')),
 )
-
