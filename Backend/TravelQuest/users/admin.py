@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.utils.translation import gettext_lazy as _
 
 from .models import User, Wallet
 
@@ -13,14 +14,34 @@ ADMIN_SITE = TravelQuestAdminSite(name='travel_quest_admin')
 
 @admin.register(User, site=ADMIN_SITE)
 class TravelQuestUserAdmin(UserAdmin):
+
+    fieldsets = (
+        (None, {"fields": ("password", )}),
+        (_("Personal info"), {"fields": ("first_name", "email")}),
+        (
+            _("Permissions"),
+            {
+                "fields": (
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                    "is_confirmed",
+                    "user_permissions",
+                ),
+            },
+        ),
+        (_("Important dates"), {"fields": ("last_login", "date_joined")}),
+    )
     list_display = (
         "id",
-        "username",
         "email",
+        "photo",
+        "bio",
         "is_staff",
         "is_active",
+        "is_confirmed",
     )
-    search_fields = ("username",)
+    search_fields = ("email",)
     list_filter = (
         "is_staff",
         "is_active",

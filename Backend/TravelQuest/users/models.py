@@ -1,14 +1,46 @@
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MinValueValidator
 from django.db import models
+
+from .manager import CustomUserManager
 
 
 class User(AbstractUser):
 
     email = models.EmailField(
-        verbose_name="Почта  пользователя", unique=True, max_length=254
+        verbose_name="Почта  пользователя",
+        unique=True,
+        max_length=256
     )
-    REQUIRED_FIELDS = ("email", )
+    username = models.CharField(
+        max_length=150,
+        blank=True,
+        null=True,
+    )
+
+    photo = models.ImageField(
+        verbose_name="Фото пользователя",
+        blank=True,
+        null=True,
+        upload_to="users/images/",
+    )
+
+    bio = models.TextField(
+        verbose_name="Биография пользователя",
+        blank=True,
+        null=True,
+    )
+
+    is_confirmed = models.BooleanField(
+        default=False,
+        help_text="Почта подтверждена",
+        blank=True,
+        null=True,
+    )
+
+    objects = CustomUserManager()
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
 
     class Meta:
         db_table = "auth_user"
@@ -49,4 +81,4 @@ class Wallet(models.Model):
         ordering = ('-id', )
 
     def __str__(self) -> str:
-        return self.value
+        return str(self.value)

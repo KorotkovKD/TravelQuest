@@ -118,7 +118,7 @@ class Task1(models.Model):
         ordering = ("-id", )
 
     def __str__(self) -> str:
-        return self.correct_answer
+        return str(self.correct_answer)
 
 
 class Task2(models.Model):
@@ -152,7 +152,7 @@ class Task2(models.Model):
         ordering = ("-id", )
 
     def __str__(self) -> str:
-        return self.correct_answer
+        return str(self.correct_answer)
 
 
 class Task3(models.Model):
@@ -228,7 +228,7 @@ class Task3(models.Model):
         ordering = ("-id", )
 
     def __str__(self) -> str:
-        return self.correct_answer
+        return str(self.correct_answer)
 
 
 class Matches(models.Model):
@@ -252,6 +252,7 @@ class Matches(models.Model):
     is_completed = models.BooleanField(
         null=True,
         blank=False,
+        default=False,
         verbose_name="Статус",
     )
 
@@ -262,9 +263,6 @@ class Matches(models.Model):
             models.Index(fields=("user", ), name="match_user_idx"),
         )
         ordering = ("-id", )
-
-    def __str__(self) -> str:
-        return self.is_completed
 
 
 class MatchesTask(models.Model):
@@ -277,7 +275,7 @@ class MatchesTask(models.Model):
         verbose_name="Матч задания",
         related_name="part_of",
     )
-    game_stage = models.ForeignKey(
+    matches = models.ForeignKey(
         Matches,
         null=False,
         blank=False,
@@ -289,16 +287,17 @@ class MatchesTask(models.Model):
         verbose_name="Заработанная награда",
         null=True,
         blank=False,
+        default=0
     )
 
     class Meta:
-        verbose_name = "Игровое задание",
-        verbose_name_plural = "Игровые задания",
+        verbose_name = "Задание матча",
+        verbose_name_plural = "Задания матча",
         indexes = (
-            models.Index(fields=("game_stage", ),
-                         name="matches_task_game_stage_idx"),
+            models.Index(fields=("matches", ),
+                         name="matches_idx"),
         )
         ordering = ("-id", )
 
     def __str__(self) -> str:
-        return self.score
+        return str(self.score)
