@@ -1,0 +1,40 @@
+version: '2.21'
+
+volumes:
+
+  media:
+  pg_data:
+  static:
+
+services:
+  
+  db:
+    image: postgres:13
+    env_file: .env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./Backend/TravelQuest
+    env_file: .env
+    depends_on:
+      - db
+    volumes:
+      - static:/backend_static
+      - media:/media
+      - ./data:/app/data
+
+
+  nginx:
+    build:
+      context: ./Gateway
+      dockerfile: Dockerfile
+    env_file: .env
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+    volumes:
+      - static:/static:ro
+      - media:/etc/nginx/media:ro
+
